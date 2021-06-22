@@ -86,6 +86,6 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        viewModel.makeApiCall(pageNumber)
+        viewModel.makeApiCall(1)
     }
 }
