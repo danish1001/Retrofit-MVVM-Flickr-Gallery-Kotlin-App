@@ -1,5 +1,6 @@
 package com.dr.retrofitmvvm
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AbsListView
@@ -15,17 +16,12 @@ import com.dr.retrofitmvvm.model.PhotosArray
 import com.dr.retrofitmvvm.viewmodel.MovieListViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MovieListAdapter.Onclick {
 
     lateinit var movieModelList: MutableList<PhotosArray>
     lateinit var adapter: MovieListAdapter
     lateinit var viewModel: MovieListViewModel
 
-    lateinit var urls: ArrayList<String>
-    var currentItems: Int = 0   
-    var scrollOutItems: Int = 0
-    var totalItems: Int = 0
-    var isScrolling: Boolean = false
     var pageNumber: Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,10 +31,9 @@ class MainActivity : AppCompatActivity() {
 
 
         movieModelList = arrayListOf()
-//        var linearLayoutManager = GridLayoutManager(this, 2)
         var linearLayoutManager = GridLayoutManager(this, 3)
         recyclerView.layoutManager = linearLayoutManager
-        adapter = MovieListAdapter(this, movieModelList)
+        adapter = MovieListAdapter(this, movieModelList, this)
         recyclerView.adapter = adapter
 
         nestedScrollView.setOnScrollChangeListener(object : NestedScrollView.OnScrollChangeListener {
@@ -50,40 +45,11 @@ class MainActivity : AppCompatActivity() {
                         // making progress bar visible and calling get data method.
                         pageNumber++;
                         viewModel.makeApiCall(pageNumber)
+                        progress.visibility = View.VISIBLE
                     }
                 }
             }
         })
-
-
-
-//        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                super.onScrolled(recyclerView, dx, dy)
-//
-//
-//
-//                currentItems = (linearLayoutManager as GridLayoutManager).childCount
-//                totalItems = (linearLayoutManager as GridLayoutManager).itemCount
-//                scrollOutItems = (linearLayoutManager as GridLayoutManager).findFirstVisibleItemPosition()
-//
-//                // fetch data if condition is met
-//
-//                if (isScrolling && (totalItems == currentItems + scrollOutItems)) {
-//                    isScrolling = false
-//                    pageNumber++;
-//                    viewModel.makeApiCall(pageNumber)
-//                }
-//            }
-//
-//            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-//                super.onScrollStateChanged(recyclerView, newState)
-//
-//                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-//                    isScrolling = true
-//                }
-//            }
-//        })
 
 
         viewModel = ViewModelProvider(this).get(MovieListViewModel::class.java)
@@ -92,11 +58,19 @@ class MainActivity : AppCompatActivity() {
             if (it != null) {
                 movieModelList = it
                 adapter.setMovieLists(it)
+                progress.visibility = View.INVISIBLE
             } else {
                 Toast.makeText(this, "error !", Toast.LENGTH_SHORT).show()
             }
         })
 
         if(viewModel.movieList.value == null) viewModel.makeApiCall(1)
+    }
+
+    override fun onClickImage(photosArray: PhotosArray) {
+        var intent = Intent(this, ShowImageActivity::class.java)
+        intent.putExtra("title", photosArray.getTitle())
+        intent.putExtra("url", photosArray.getUrl_s())
+        startActivity(intent)
     }
 }

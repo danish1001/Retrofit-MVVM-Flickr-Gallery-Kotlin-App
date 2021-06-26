@@ -22,5 +22,14 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
+
+    <ProgressBar
+        android:id="@+id/progress"
+        android:visibility="invisible"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+
+        />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

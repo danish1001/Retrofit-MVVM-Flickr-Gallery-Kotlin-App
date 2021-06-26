@@ -38,8 +38,16 @@ class MovieListViewModel: ViewModel() {
             override fun onResponse(call: Call<Post>, response: Response<Post>) {
 
                 var data:MutableList<PhotosArray>? = response.body()?.photos?.getPhotosArrays()
-                movieList.postValue(data)
+//                movieList.postValue(data)
+                for(i in response.body()?.photos?.getPhotosArrays()!!) {
+                    Log.i("data is ", i.getUrl_s().toString())
+                    var j: PhotosArray = i
 
+                }
+                if (data != null) {
+                    urls?.addAll(data)
+                }
+                movieList.postValue(urls)
                 Log.i("success", "---------------------------------------------")
             }
 

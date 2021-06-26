@@ -15,7 +15,7 @@ import com.dr.retrofitmvvm.model.PhotosObject
 import com.dr.retrofitmvvm.model.Post
 import kotlinx.android.synthetic.main.recycler_row.view.*
 
-class MovieListAdapter(var context: Context, var movieList: MutableList<PhotosArray>): RecyclerView.Adapter<MovieListAdapter.ViewHolder>() {
+class MovieListAdapter(var context: Context, var movieList: MutableList<PhotosArray>, var listener: Onclick): RecyclerView.Adapter<MovieListAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val body = itemView.findViewById<View>(R.id.imageView) as ImageView
@@ -29,7 +29,11 @@ class MovieListAdapter(var context: Context, var movieList: MutableList<PhotosAr
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         var view = LayoutInflater.from(parent.context).inflate(R.layout.recycler_row, parent, false)
-        return ViewHolder(view)
+        var viewHolder = ViewHolder(view)
+        view.setOnClickListener {
+            listener.onClickImage(movieList[viewHolder.layoutPosition])
+        }
+        return viewHolder
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -42,5 +46,9 @@ class MovieListAdapter(var context: Context, var movieList: MutableList<PhotosAr
 
     override fun getItemCount(): Int {
         return movieList.size
+    }
+
+    interface Onclick {
+        fun onClickImage(photosArray: PhotosArray)
     }
 }
