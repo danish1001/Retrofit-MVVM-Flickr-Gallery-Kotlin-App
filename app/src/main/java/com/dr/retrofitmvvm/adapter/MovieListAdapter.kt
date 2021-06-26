@@ -18,12 +18,9 @@ import kotlinx.android.synthetic.main.recycler_row.view.*
 class MovieListAdapter(var context: Context, var movieList: MutableList<PhotosArray>): RecyclerView.Adapter<MovieListAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-//        val titleView = itemView.findViewById<View>(R.id.imageView) as TextView
-//        val body = itemView.findViewById<View>(R.id.body) as TextView
         val body = itemView.findViewById<View>(R.id.imageView) as ImageView
 
     }
-
 
     fun setMovieLists(movieList: MutableList<PhotosArray>) {
         this.movieList = movieList
@@ -36,10 +33,11 @@ class MovieListAdapter(var context: Context, var movieList: MutableList<PhotosAr
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-//        holder.titleView.text = movieList[position].getTitle()
-//        holder.body.text = movieList[position].getOwner()
-        Glide.with(context).load(movieList[position].getUrl_s()).into(holder.body)
-//        holder.titleView.text = movieList[position].getTitle()
+        Glide.with(context)
+            .load(movieList[position].getUrl_s())
+            .placeholder(R.drawable.loading_layout)
+            .centerCrop()
+            .into(holder.body)
     }
 
     override fun getItemCount(): Int {

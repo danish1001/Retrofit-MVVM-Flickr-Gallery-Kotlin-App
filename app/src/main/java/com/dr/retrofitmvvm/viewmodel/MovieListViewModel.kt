@@ -30,22 +30,16 @@ class MovieListViewModel: ViewModel() {
         var Url: String = "https://api.flickr.com/services/rest/?method=flickr.photos" +
                 ".getRecent&per_page=35&page="+ pageNumber +"&api_key=6f102c62f41998d151e" +
                 "5a1b48713cf13&format=json&nojsoncallback=1&extras=url_s"
+//        var Url: String = "https://api.flickr.com/services/rest/?method=flickr.photos.getRecent&per_page=20&page=1&api_key=6f102c62f41998d151e5a1b48713cf13&format=json&nojsoncallback=1&extras=url_s"
 
         var call: Call<Post> = apiService.getMovieList(Url)
 
         call.enqueue(object: Callback<Post>{
             override fun onResponse(call: Call<Post>, response: Response<Post>) {
 
-          var data:MutableList<PhotosArray>? = response.body()?.photos?.getPhotosArrays()
-                for(i in response.body()?.photos?.getPhotosArrays()!!) {
-                    Log.i("data is ", i.getUrl_s().toString())
-                    var j: PhotosArray = i
+                var data:MutableList<PhotosArray>? = response.body()?.photos?.getPhotosArrays()
+                movieList.postValue(data)
 
-                }
-                if (data != null) {
-                    urls?.addAll(data)
-                }
-                movieList.postValue(urls)
                 Log.i("success", "---------------------------------------------")
             }
 
